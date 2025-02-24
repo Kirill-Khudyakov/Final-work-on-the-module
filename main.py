@@ -15,8 +15,8 @@ def main():
 
     while True:
         command = input(
-            "Введите 'стоп' для завершения или нажмите Enter для продолжения: ")
-        if command.lower() == 'стоп':
+            "Введите 'cтоп' для завершения или нажмите Enter для продолжения: ")
+        if command.lower() == 'cтоп':
             print('Завершение работы программы.')
             break
 
@@ -34,10 +34,17 @@ def main():
             folder_name = input(
                 'Введите название папки для сохранения фотографий на Яндекс диск: ')
 
-            # Проверка, является ли user_input числом (id) или строкой (screen_name)
-            user_id = user_input if user_input.isdigit() else user_input
-
             vk = VK(vk_token)
+
+            # Получаем user_id, если передан screen_name
+            if not user_input.isdigit():
+                user_id = vk.get_user_id(user_input)
+                if user_id is None:
+                    print('Не удалось получить user_id. Проверьте screen_name.')
+                    continue
+            else:
+                user_id = user_input
+
             photos = vk.get_photos(
                 user_id, count=count_photos, album_id=album_id)
 
